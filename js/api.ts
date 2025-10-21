@@ -6,7 +6,7 @@ const api = {
   async buscarPensamentos() {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos`);
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Problema na resposta da rede");
       return await response.json();
     } catch {
       alert("Erro ao buscar pensamentos");
@@ -23,7 +23,7 @@ const api = {
         },
         body: JSON.stringify(pensamento),
       });
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Problema na resposta da rede");
       return await response.json();
     } catch {
       alert("Erro ao salvar pensamento");
@@ -34,7 +34,7 @@ const api = {
   async buscarPensamentoPorId(id: string) {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`);
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Problema na resposta da rede");
       return await response.json();
     } catch {
       alert("Erro ao buscar pensamento");
@@ -51,10 +51,26 @@ const api = {
         },
         body: JSON.stringify(pensamento),
       });
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Problema na resposta da rede");
       return await response.json();
     } catch {
       alert("Erro ao editar pensamento");
+      throw Error;
+    }
+  },
+
+  async atualizarFavorito(pensamento: InterfacePensamento) {
+    try {
+      const response = await fetch(`${URL_BASE}/pensamentos/${pensamento.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pensamento),
+      });
+      if (!response.ok) throw new Error("Problema na resposta da rede");
+    } catch {
+      alert("Erro ao excluir um pensamento");
       throw Error;
     }
   },
@@ -64,7 +80,7 @@ const api = {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error("Problema na resposta da rede");
     } catch {
       alert("Erro ao excluir um pensamento");
       throw Error;

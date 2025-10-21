@@ -4,7 +4,7 @@ const api = {
         try {
             const response = await fetch(`${URL_BASE}/pensamentos`);
             if (!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error("Problema na resposta da rede");
             return await response.json();
         }
         catch {
@@ -22,7 +22,7 @@ const api = {
                 body: JSON.stringify(pensamento),
             });
             if (!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error("Problema na resposta da rede");
             return await response.json();
         }
         catch {
@@ -34,7 +34,7 @@ const api = {
         try {
             const response = await fetch(`${URL_BASE}/pensamentos/${id}`);
             if (!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error("Problema na resposta da rede");
             return await response.json();
         }
         catch {
@@ -52,11 +52,28 @@ const api = {
                 body: JSON.stringify(pensamento),
             });
             if (!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error("Problema na resposta da rede");
             return await response.json();
         }
         catch {
             alert("Erro ao editar pensamento");
+            throw Error;
+        }
+    },
+    async atualizarFavorito(pensamento) {
+        try {
+            const response = await fetch(`${URL_BASE}/pensamentos/${pensamento.id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(pensamento),
+            });
+            if (!response.ok)
+                throw new Error("Problema na resposta da rede");
+        }
+        catch {
+            alert("Erro ao excluir um pensamento");
             throw Error;
         }
     },
@@ -66,7 +83,7 @@ const api = {
                 method: "DELETE",
             });
             if (!response.ok)
-                throw new Error("Network response was not ok");
+                throw new Error("Problema na resposta da rede");
         }
         catch {
             alert("Erro ao excluir um pensamento");
