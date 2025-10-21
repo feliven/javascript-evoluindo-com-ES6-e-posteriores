@@ -2,20 +2,12 @@ import api from "./api.js";
 const ui = {
     async preencherFormulario(pensamentoId) {
         const pensamento = (await api.buscarPensamentoPorId(pensamentoId));
-        if (pensamento) {
-            const pensamentoIDNaPagina = document.getElementById("pensamento-id");
-            if (pensamentoIDNaPagina) {
-                pensamentoIDNaPagina.value = pensamento.id;
-            }
-            const pensamentoConteudoNaPagina = document.getElementById("pensamento-conteudo");
-            if (pensamentoConteudoNaPagina) {
-                pensamentoConteudoNaPagina.value = pensamento.conteudo;
-            }
-            const pensamentoAutoriaNaPagina = document.getElementById("pensamento-autoria");
-            if (pensamentoAutoriaNaPagina) {
-                pensamentoAutoriaNaPagina.value = pensamento.autoria;
-            }
-        }
+        const pensamentoIDNaPagina = document.getElementById("pensamento-id");
+        pensamentoIDNaPagina.value = pensamento.id;
+        const pensamentoConteudoNaPagina = document.getElementById("pensamento-conteudo");
+        pensamentoConteudoNaPagina.value = pensamento.conteudo;
+        const pensamentoAutoriaNaPagina = document.getElementById("pensamento-autoria");
+        pensamentoAutoriaNaPagina.value = pensamento.autoria;
     },
     limparFormulario() {
         const formulario = document.getElementById("pensamento-form");
@@ -23,7 +15,7 @@ const ui = {
             formulario.reset();
         }
     },
-    async renderizarPensamentos() {
+    async renderizarPensamentos(arrayPensamentos) {
         const listaPensamentos = document.getElementById("lista-pensamentos");
         const mensagemVazia = document.getElementById("mensagem-vazia");
         listaPensamentos.innerHTML = "";
@@ -32,12 +24,16 @@ const ui = {
             if (!pensamentos) {
                 return;
             }
-            if (pensamentos.length === 0) {
+            if (typeof arrayPensamentos === "undefined") {
+                arrayPensamentos = pensamentos;
+                // arrayPensamentos será do tipo InterfacePensamento[]
+            }
+            if (arrayPensamentos.length === 0) {
                 mensagemVazia.style.display = "block";
             }
             else {
                 mensagemVazia.style.display = "none";
-                pensamentos.forEach(ui.adicionarPensamentoNaLista);
+                arrayPensamentos.forEach(ui.adicionarPensamentoNaLista);
             }
         }
         catch {

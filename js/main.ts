@@ -1,18 +1,17 @@
 import ui from "./ui.js";
 import api from "./api.js";
 
+const inputBusca = document.getElementById("campo-busca") as HTMLInputElement;
+
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
 
-  const formularioPensamento = document.getElementById("pensamento-form");
-  const botaoCancelar = document.getElementById("botao-cancelar");
+  const formularioPensamento = document.getElementById("pensamento-form") as HTMLFormElement;
+  const botaoCancelar = document.getElementById("botao-cancelar") as HTMLButtonElement;
 
-  if (formularioPensamento) {
-    formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
-  }
-  if (botaoCancelar) {
-    botaoCancelar.addEventListener("click", manipularCancelamento);
-  }
+  formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
+  botaoCancelar.addEventListener("click", manipularCancelamento);
+  inputBusca.addEventListener("input", manipularBusca);
 });
 
 async function manipularSubmissaoFormulario(event: SubmitEvent) {
@@ -38,4 +37,15 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
 
 function manipularCancelamento() {
   ui.limparFormulario();
+}
+
+async function manipularBusca() {
+  const searchTerm = inputBusca.value;
+
+  try {
+    const pensamentosFiltrados = await api.pensamentoSearch(searchTerm);
+    ui.renderizarPensamentos(pensamentosFiltrados);
+  } catch (error) {
+    throw new Error("");
+  }
 }

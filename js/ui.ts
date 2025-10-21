@@ -5,22 +5,14 @@ const ui = {
   async preencherFormulario(pensamentoId: string) {
     const pensamento = (await api.buscarPensamentoPorId(pensamentoId)) as InterfacePensamento;
 
-    if (pensamento) {
-      const pensamentoIDNaPagina = document.getElementById("pensamento-id") as HTMLInputElement;
-      if (pensamentoIDNaPagina) {
-        pensamentoIDNaPagina.value = pensamento.id as string;
-      }
+    const pensamentoIDNaPagina = document.getElementById("pensamento-id") as HTMLInputElement;
+    pensamentoIDNaPagina.value = pensamento.id as string;
 
-      const pensamentoConteudoNaPagina = document.getElementById("pensamento-conteudo") as HTMLTextAreaElement;
-      if (pensamentoConteudoNaPagina) {
-        pensamentoConteudoNaPagina.value = pensamento.conteudo;
-      }
+    const pensamentoConteudoNaPagina = document.getElementById("pensamento-conteudo") as HTMLTextAreaElement;
+    pensamentoConteudoNaPagina.value = pensamento.conteudo;
 
-      const pensamentoAutoriaNaPagina = document.getElementById("pensamento-autoria") as HTMLInputElement;
-      if (pensamentoAutoriaNaPagina) {
-        pensamentoAutoriaNaPagina.value = pensamento.autoria;
-      }
-    }
+    const pensamentoAutoriaNaPagina = document.getElementById("pensamento-autoria") as HTMLInputElement;
+    pensamentoAutoriaNaPagina.value = pensamento.autoria;
   },
 
   limparFormulario() {
@@ -30,7 +22,7 @@ const ui = {
     }
   },
 
-  async renderizarPensamentos() {
+  async renderizarPensamentos(arrayPensamentos?: InterfacePensamento[]) {
     const listaPensamentos = document.getElementById("lista-pensamentos") as HTMLUListElement;
     const mensagemVazia = document.getElementById("mensagem-vazia") as HTMLDivElement;
     listaPensamentos.innerHTML = "";
@@ -42,11 +34,16 @@ const ui = {
         return;
       }
 
-      if (pensamentos.length === 0) {
+      if (typeof arrayPensamentos === "undefined") {
+        arrayPensamentos = pensamentos;
+        // arrayPensamentos será do tipo InterfacePensamento[]
+      }
+
+      if (arrayPensamentos.length === 0) {
         mensagemVazia.style.display = "block";
       } else {
         mensagemVazia.style.display = "none";
-        pensamentos.forEach(ui.adicionarPensamentoNaLista);
+        arrayPensamentos.forEach(ui.adicionarPensamentoNaLista);
       }
     } catch {
       alert("Erro ao renderizar pensamentos");
