@@ -1,0 +1,76 @@
+import axios from "axios";
+
+import type { InterfacePensamento } from "./interface-pensamento.js";
+
+const URL_BASE = "http://localhost:3000";
+
+const api = {
+  async buscarPensamentos() {
+    try {
+      const response = await axios.get(`${URL_BASE}/pensamentos`);
+      return await response.data;
+    } catch {
+      alert("Erro ao buscar pensamentos");
+      throw Error;
+    }
+  },
+
+  async salvarPensamento(pensamento: InterfacePensamento) {
+    try {
+      const response = await axios.post(`${URL_BASE}/pensamentos`, pensamento);
+      return await response.data;
+    } catch {
+      alert("Erro ao salvar pensamento");
+      throw Error;
+    }
+  },
+
+  async buscarPensamentoPorId(id: string) {
+    try {
+      const response = await axios.get(`${URL_BASE}/pensamentos/${id}`);
+      return await response.data;
+    } catch {
+      alert("Erro ao buscar pensamento");
+      throw Error;
+    }
+  },
+
+  async editarPensamento(pensamento: InterfacePensamento) {
+    try {
+      const response = await axios.put(`${URL_BASE}/pensamentos/${pensamento.id}`, pensamento);
+      return await response.data;
+    } catch {
+      alert("Erro ao editar pensamento");
+      throw Error;
+    }
+  },
+
+  async excluirPensamento(id: string) {
+    try {
+      const response = await axios.delete(`${URL_BASE}/pensamentos/${id}`);
+    } catch {
+      alert("Erro ao excluir um pensamento");
+      throw Error;
+    }
+  },
+
+  async pensamentoSearch(searchTerm: string) {
+    try {
+      const todosOsPensamentos = (await this.buscarPensamentos()) as InterfacePensamento[];
+      const termoDeBuscaEmMinusculas = searchTerm.toLowerCase();
+
+      const pensamentosFiltrados = todosOsPensamentos.filter((pensamento) => {
+        return (
+          pensamento.conteudo.toLowerCase().includes(termoDeBuscaEmMinusculas) ||
+          pensamento.autoria.toLowerCase().includes(termoDeBuscaEmMinusculas)
+        );
+      });
+
+      return pensamentosFiltrados;
+    } catch (error) {
+      throw new Error("${error}");
+    }
+  },
+};
+
+export default api;
