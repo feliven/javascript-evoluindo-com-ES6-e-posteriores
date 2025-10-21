@@ -33,11 +33,38 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
 
   try {
     if (id) {
-      await api.editarPensamento({ id, conteudo, autoria, favorito });
+      // Update existing item
+      const updatedPensamento = await api.editarPensamento({ id, conteudo, autoria, favorito });
+      // Find and update the specific li element using SERVER DATA
+      const li = document.querySelector(`[data-id="${id}"]`) as HTMLLIElement;
+      if (li) {
+        li.querySelector(".pensamento-conteudo")!.textContent = updatedPensamento.conteudo;
+        li.querySelector(".pensamento-autoria")!.textContent = updatedPensamento.autoria;
+      }
+
+      // Also update the favorite icon in case favorito changed
+      const iconeFavorito = li.querySelector(".botao-favorito img") as HTMLImageElement;
+      if (iconeFavorito) {
+        iconeFavorito.src = updatedPensamento.favorito
+          ? "assets/imagens/icone-favorito.png"
+          : "assets/imagens/icone-favorito_outline.png";
+      }
     } else {
-      await api.salvarPensamento({ conteudo, autoria, favorito });
+      // Add new item
+      const novoPensamento = await api.salvarPensamento({ conteudo, autoria, favorito });
+      ui.adicionarPensamentoNaLista(novoPensamento);
+      // Hide empty message if visible
+      const mensagemVazia = document.getElementById("mensagem-vazia") as HTMLDivElement;
+      if (mensagemVazia) {
+        mensagemVazia.style.display = "none";
+      }
     }
-    ui.renderizarPensamentos();
+    ui.limparFormulario();
+
+    const idInput = document.getElementById("pensamento-id") as HTMLInputElement;
+    if (idInput) {
+      idInput.value = "";
+    }
   } catch {
     alert("Erro ao salvar pensamento");
   }

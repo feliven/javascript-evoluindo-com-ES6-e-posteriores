@@ -76,7 +76,7 @@ const api = {
       } else {
         responseJSON.favorito = true;
       }
-      this.editarPensamento(responseJSON);
+      await this.editarPensamento(responseJSON);
     } catch {
       alert("Erro ao editar um pensamento");
       throw Error;

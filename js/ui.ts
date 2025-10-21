@@ -74,8 +74,12 @@ const ui = {
     pensamentoAutoria.classList.add("pensamento-autoria");
 
     const botaoEditar = document.createElement("button");
+    botaoEditar.type = "button";
     botaoEditar.classList.add("botao-editar");
-    botaoEditar.onclick = () => ui.preencherFormulario(pensamento.id as string);
+    botaoEditar.onclick = (event) => {
+      event.preventDefault();
+      ui.preencherFormulario(pensamento.id as string);
+    };
 
     const iconeEditar = document.createElement("img");
     iconeEditar.src = "assets/imagens/icone-editar.png";
@@ -84,10 +88,22 @@ const ui = {
 
     const botaoExcluir = document.createElement("button");
     botaoExcluir.classList.add("botao-excluir");
-    botaoExcluir.onclick = async () => {
+    botaoExcluir.type = "button";
+    botaoExcluir.onclick = async (event) => {
+      event.preventDefault();
       try {
         await api.excluirPensamento(pensamento.id as string);
-        ui.renderizarPensamentos();
+
+        // Remove only this specific list item from the DOM
+        li.remove();
+
+        // Check if the list is now empty and show the empty message if needed
+        const listaPensamentos = document.getElementById("lista-pensamentos") as HTMLUListElement;
+        const mensagemVazia = document.getElementById("mensagem-vazia") as HTMLDivElement;
+
+        if (listaPensamentos.children.length === 0) {
+          mensagemVazia.style.display = "block";
+        }
       } catch (error) {
         alert("Erro ao excluir pensamento");
       }
@@ -100,12 +116,22 @@ const ui = {
 
     const botaoFavorito = document.createElement("button");
     botaoFavorito.classList.add("botao-favorito");
-    botaoFavorito.onclick = async () => {
+    botaoFavorito.type = "button";
+    botaoFavorito.onclick = async (event) => {
+      event.preventDefault();
       try {
         await api.atualizarFavorito(pensamento.id as string);
-        ui.renderizarPensamentos();
+
+        // Toggle the icon without re-rendering the entire list
+        const isFavorited = iconeFavorito.src.includes("icone-favorito.png");
+        iconeFavorito.src = isFavorited
+          ? "assets/imagens/icone-favorito_outline.png"
+          : "assets/imagens/icone-favorito.png";
+
+        // Update the pensamento object to keep state in sync
+        pensamento.favorito = !pensamento.favorito;
       } catch (error) {
-        throw new Error("EROOOO");
+        alert("Erro ao atualizar favorito");
       }
     };
 
