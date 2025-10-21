@@ -1,10 +1,11 @@
-import axios from "axios";
 const URL_BASE = "http://localhost:3000";
 const api = {
     async buscarPensamentos() {
         try {
-            const response = await axios.get(`${URL_BASE}/pensamentos`);
-            return await response.data;
+            const response = await fetch(`${URL_BASE}/pensamentos`);
+            if (!response.ok)
+                throw new Error("Network response was not ok");
+            return await response.json();
         }
         catch {
             alert("Erro ao buscar pensamentos");
@@ -13,8 +14,16 @@ const api = {
     },
     async salvarPensamento(pensamento) {
         try {
-            const response = await axios.post(`${URL_BASE}/pensamentos`, pensamento);
-            return await response.data;
+            const response = await fetch(`${URL_BASE}/pensamentos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(pensamento),
+            });
+            if (!response.ok)
+                throw new Error("Network response was not ok");
+            return await response.json();
         }
         catch {
             alert("Erro ao salvar pensamento");
@@ -23,8 +32,10 @@ const api = {
     },
     async buscarPensamentoPorId(id) {
         try {
-            const response = await axios.get(`${URL_BASE}/pensamentos/${id}`);
-            return await response.data;
+            const response = await fetch(`${URL_BASE}/pensamentos/${id}`);
+            if (!response.ok)
+                throw new Error("Network response was not ok");
+            return await response.json();
         }
         catch {
             alert("Erro ao buscar pensamento");
@@ -33,8 +44,16 @@ const api = {
     },
     async editarPensamento(pensamento) {
         try {
-            const response = await axios.put(`${URL_BASE}/pensamentos/${pensamento.id}`, pensamento);
-            return await response.data;
+            const response = await fetch(`${URL_BASE}/pensamentos/${pensamento.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(pensamento),
+            });
+            if (!response.ok)
+                throw new Error("Network response was not ok");
+            return await response.json();
         }
         catch {
             alert("Erro ao editar pensamento");
@@ -43,7 +62,11 @@ const api = {
     },
     async excluirPensamento(id) {
         try {
-            const response = await axios.delete(`${URL_BASE}/pensamentos/${id}`);
+            const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
+                method: "DELETE",
+            });
+            if (!response.ok)
+                throw new Error("Network response was not ok");
         }
         catch {
             alert("Erro ao excluir um pensamento");
