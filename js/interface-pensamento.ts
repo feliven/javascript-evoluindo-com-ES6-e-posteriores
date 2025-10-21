@@ -2,5 +2,5 @@ export interface InterfacePensamento {
   id?: string;
   conteudo: string;
   autoria: string;
-  favorito?: boolean;
+  favorito: boolean;
 }

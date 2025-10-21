@@ -71,6 +71,14 @@ const api = {
             });
             if (!response.ok)
                 throw new Error("Problema na resposta da rede");
+            let responseJSON = (await response.json());
+            if (responseJSON.favorito === true) {
+                responseJSON.favorito = false;
+            }
+            else {
+                responseJSON.favorito = true;
+            }
+            this.editarPensamento(responseJSON);
         }
         catch {
             alert("Erro ao excluir um pensamento");

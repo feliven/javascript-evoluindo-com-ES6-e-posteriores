@@ -17,12 +17,13 @@ async function manipularSubmissaoFormulario(event) {
     const conteudo = conteudoSemValue ? conteudoSemValue.value : "";
     const autoriaSemValue = document.getElementById("pensamento-autoria");
     const autoria = autoriaSemValue ? autoriaSemValue.value : "";
+    const favorito = false;
     try {
         if (id) {
-            await api.editarPensamento({ id, conteudo, autoria });
+            await api.editarPensamento({ id, conteudo, autoria, favorito });
         }
         else {
-            await api.salvarPensamento({ conteudo, autoria });
+            await api.salvarPensamento({ conteudo, autoria, favorito });
         }
         ui.renderizarPensamentos();
     }
