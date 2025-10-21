@@ -49,6 +49,24 @@ const api = {
       throw error;
     }
   },
+
+  async pensamentoSearch(searchTerm) {
+    try {
+      const todosOsPensamentos = await this.buscarPensamentos();
+      const termoDeBuscaEmMinusculas = searchTerm.toLowerCase();
+
+      const pensamentosFiltrados = todosOsPensamentos.filter((pensamento) => {
+        return (
+          todosOsPensamentos.conteudo.toLowerCase().includes(termoDeBuscaEmMinusculas) ||
+          todosOsPensamentos.autoria.toLowerCase().includes(termoDeBuscaEmMinusculas)
+        );
+      });
+
+      return pensamentosFiltrados;
+    } catch (error) {
+      throw new Error("${error}");
+    }
+  },
 };
 
 export default api;
