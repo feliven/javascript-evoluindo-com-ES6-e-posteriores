@@ -1,12 +1,18 @@
 import ui from "./ui.js";
 import api from "./api.js";
-const inputBusca = document.getElementById("campo-busca");
+let formularioPensamento;
+let botaoCancelar;
+let botaoFavorito;
+let inputBusca;
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
-    const formularioPensamento = document.getElementById("pensamento-form");
-    const botaoCancelar = document.getElementById("botao-cancelar");
+    formularioPensamento = document.getElementById("pensamento-form");
+    botaoCancelar = document.getElementById("botao-cancelar");
+    // botaoFavorito = document.getElementById("botao-favorito") as HTMLButtonElement;
+    inputBusca = document.getElementById("campo-busca");
     formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
     botaoCancelar.addEventListener("click", manipularCancelamento);
+    // botaoFavorito.addEventListener("click", manipularFavorito);
     inputBusca.addEventListener("input", manipularBusca);
 });
 async function manipularSubmissaoFormulario(event) {
@@ -34,7 +40,22 @@ async function manipularSubmissaoFormulario(event) {
 function manipularCancelamento() {
     ui.limparFormulario();
 }
+async function manipularFavorito() {
+    try {
+        const idSemValue = document.getElementById("pensamento-id");
+        const id = idSemValue ? idSemValue.value : "";
+        if (id) {
+            await api.atualizarFavorito(id);
+        }
+    }
+    catch (error) {
+        throw new Error("ERRO");
+    }
+}
 async function manipularBusca() {
+    if (!inputBusca) {
+        return;
+    }
     const searchTerm = inputBusca.value;
     try {
         const pensamentosFiltrados = await api.pensamentoSearch(searchTerm);

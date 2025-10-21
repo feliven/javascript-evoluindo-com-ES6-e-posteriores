@@ -59,18 +59,18 @@ const api = {
     }
   },
 
-  async atualizarFavorito(pensamento: InterfacePensamento) {
+  async atualizarFavorito(id: string) {
     try {
-      const response = await fetch(`${URL_BASE}/pensamentos/${pensamento.id}`, {
+      const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(pensamento),
       });
       if (!response.ok) throw new Error("Problema na resposta da rede");
 
       let responseJSON = (await response.json()) as InterfacePensamento;
+      console.log(responseJSON);
       if (responseJSON.favorito === true) {
         responseJSON.favorito = false;
       } else {
@@ -78,7 +78,7 @@ const api = {
       }
       this.editarPensamento(responseJSON);
     } catch {
-      alert("Erro ao excluir um pensamento");
+      alert("Erro ao editar um pensamento");
       throw Error;
     }
   },

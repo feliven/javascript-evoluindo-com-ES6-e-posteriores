@@ -82,8 +82,19 @@ const ui = {
         botaoExcluir.appendChild(iconeExcluir);
         const botaoFavorito = document.createElement("button");
         botaoFavorito.classList.add("botao-favorito");
+        botaoFavorito.onclick = async () => {
+            try {
+                await api.atualizarFavorito(pensamento.id);
+                ui.renderizarPensamentos();
+            }
+            catch (error) {
+                throw new Error("EROOOO");
+            }
+        };
         const iconeFavorito = document.createElement("img");
-        iconeFavorito.src = "assets/imagens/icone-favorito_outline.png";
+        iconeFavorito.src = pensamento.favorito
+            ? "assets/imagens/icone-favorito.png"
+            : "assets/imagens/icone-favorito_outline.png";
         iconeFavorito.alt = "Ícone de favorito";
         botaoFavorito.appendChild(iconeFavorito);
         const icones = document.createElement("div");

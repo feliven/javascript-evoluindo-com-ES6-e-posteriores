@@ -4,7 +4,7 @@ declare const api: {
     salvarPensamento(pensamento: InterfacePensamento): Promise<any>;
     buscarPensamentoPorId(id: string): Promise<any>;
     editarPensamento(pensamento: InterfacePensamento): Promise<any>;
-    atualizarFavorito(pensamento: InterfacePensamento): Promise<void>;
+    atualizarFavorito(id: string): Promise<void>;
     excluirPensamento(id: string): Promise<void>;
     pensamentoSearch(searchTerm: string): Promise<InterfacePensamento[]>;
 };

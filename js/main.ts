@@ -1,16 +1,22 @@
 import ui from "./ui.js";
 import api from "./api.js";
 
-const inputBusca = document.getElementById("campo-busca") as HTMLInputElement;
+let formularioPensamento: HTMLFormElement | null;
+let botaoCancelar: HTMLButtonElement | null;
+let botaoFavorito: HTMLButtonElement | null;
+let inputBusca: HTMLInputElement | null;
 
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
 
-  const formularioPensamento = document.getElementById("pensamento-form") as HTMLFormElement;
-  const botaoCancelar = document.getElementById("botao-cancelar") as HTMLButtonElement;
+  formularioPensamento = document.getElementById("pensamento-form") as HTMLFormElement;
+  botaoCancelar = document.getElementById("botao-cancelar") as HTMLButtonElement;
+  // botaoFavorito = document.getElementById("botao-favorito") as HTMLButtonElement;
+  inputBusca = document.getElementById("campo-busca") as HTMLInputElement;
 
   formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
   botaoCancelar.addEventListener("click", manipularCancelamento);
+  // botaoFavorito.addEventListener("click", manipularFavorito);
   inputBusca.addEventListener("input", manipularBusca);
 });
 
@@ -41,7 +47,24 @@ function manipularCancelamento() {
   ui.limparFormulario();
 }
 
+async function manipularFavorito() {
+  try {
+    const idSemValue = document.getElementById("pensamento-id") as HTMLInputElement;
+    const id = idSemValue ? idSemValue.value : "";
+
+    if (id) {
+      await api.atualizarFavorito(id);
+    }
+  } catch (error) {
+    throw new Error("ERRO");
+  }
+}
+
 async function manipularBusca() {
+  if (!inputBusca) {
+    return;
+  }
+
   const searchTerm = inputBusca.value;
 
   try {
