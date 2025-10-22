@@ -1,9 +1,9 @@
 import ui from "./ui.js";
 import api from "./api.js";
+import { InterfacePensamento } from "./interface-pensamento.js";
 
 let formularioPensamento: HTMLFormElement | null;
 let botaoCancelar: HTMLButtonElement | null;
-let botaoFavorito: HTMLButtonElement | null;
 let inputBusca: HTMLInputElement | null;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -11,49 +11,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
   formularioPensamento = document.getElementById("pensamento-form") as HTMLFormElement;
   botaoCancelar = document.getElementById("botao-cancelar") as HTMLButtonElement;
-  // botaoFavorito = document.getElementById("botao-favorito") as HTMLButtonElement;
   inputBusca = document.getElementById("campo-busca") as HTMLInputElement;
 
   formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
   botaoCancelar.addEventListener("click", manipularCancelamento);
-  // botaoFavorito.addEventListener("click", manipularFavorito);
   inputBusca.addEventListener("input", manipularBusca);
 });
 
 async function manipularSubmissaoFormulario(event: SubmitEvent) {
   event.preventDefault();
-  const idSemValue = document.getElementById("pensamento-id") as HTMLInputElement;
-  const id = idSemValue ? idSemValue.value : "";
-  const conteudoSemValue = document.getElementById("pensamento-conteudo") as HTMLTextAreaElement;
-  const conteudo = conteudoSemValue ? conteudoSemValue.value : "";
-  const autoriaSemValue = document.getElementById("pensamento-autoria") as HTMLInputElement;
-  const autoria = autoriaSemValue ? autoriaSemValue.value : "";
+  const idElemento = document.getElementById("pensamento-id") as HTMLInputElement;
+  const id = idElemento ? idElemento.value : "";
+  const conteudoElemento = document.getElementById("pensamento-conteudo") as HTMLTextAreaElement;
+  const conteudo = conteudoElemento ? conteudoElemento.value : "";
+  const autoriaElemento = document.getElementById("pensamento-autoria") as HTMLInputElement;
+  const autoria = autoriaElemento ? autoriaElemento.value : "";
+  const dataElemento = document.getElementById("pensamento-data") as HTMLInputElement;
+  const dataString = dataElemento ? dataElemento.value : ""; // it is in a ISO 8601 standard format ("YYYY-MM-DD")
+  const data = new Date(dataString + "T00:00:00"); // meia-noite no horário local
 
   const favorito = false;
 
   try {
     if (id) {
-      // Update existing item
-      const updatedPensamento = await api.editarPensamento({ id, conteudo, autoria, favorito });
-      // Find and update the specific li element using SERVER DATA
+      const pensamentoAtualizado: InterfacePensamento = await api.editarPensamento({
+        id,
+        conteudo,
+        autoria,
+        favorito,
+        data,
+      });
+
       const li = document.querySelector(`[data-id="${id}"]`) as HTMLLIElement;
       if (li) {
-        li.querySelector(".pensamento-conteudo")!.textContent = updatedPensamento.conteudo;
-        li.querySelector(".pensamento-autoria")!.textContent = updatedPensamento.autoria;
+        li.querySelector(".pensamento-conteudo")!.textContent = pensamentoAtualizado.conteudo;
+        li.querySelector(".pensamento-autoria")!.textContent = pensamentoAtualizado.autoria;
+        li.querySelector(".pensamento-data")!.textContent = pensamentoAtualizado.data
+          ? pensamentoAtualizado.data.toString()
+          : null;
       }
 
-      // Also update the favorite icon in case favorito changed
+      // Atualiza o ícone de favorito
       const iconeFavorito = li.querySelector(".botao-favorito img") as HTMLImageElement;
       if (iconeFavorito) {
-        iconeFavorito.src = updatedPensamento.favorito
+        iconeFavorito.src = pensamentoAtualizado.favorito
           ? "assets/imagens/icone-favorito.png"
           : "assets/imagens/icone-favorito_outline.png";
       }
     } else {
-      // Add new item
-      const novoPensamento = await api.salvarPensamento({ conteudo, autoria, favorito });
+      // Adiciona novo item
+      const novoPensamento = await api.salvarPensamento({ conteudo, autoria, favorito, data });
       ui.adicionarPensamentoNaLista(novoPensamento);
-      // Hide empty message if visible
+      // Oculta mensagem vazia se ela estiver visível
       const mensagemVazia = document.getElementById("mensagem-vazia") as HTMLDivElement;
       if (mensagemVazia) {
         mensagemVazia.style.display = "none";

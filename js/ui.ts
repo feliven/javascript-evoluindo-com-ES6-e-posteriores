@@ -73,6 +73,13 @@ const ui = {
     pensamentoAutoria.textContent = pensamento.autoria;
     pensamentoAutoria.classList.add("pensamento-autoria");
 
+    const pensamentoData = document.createElement("div");
+    const pensamentoDataComoString = pensamento.data
+      ? new Date(pensamento.data).toLocaleDateString("pt-br", { day: "2-digit", month: "2-digit", year: "numeric" })
+      : null;
+    pensamentoData.textContent = pensamentoDataComoString;
+    pensamentoData.classList.add("pensamento-data");
+
     const botaoEditar = document.createElement("button");
     botaoEditar.type = "button";
     botaoEditar.classList.add("botao-editar");
@@ -151,6 +158,7 @@ const ui = {
     li.appendChild(iconeAspas);
     li.appendChild(pensamentoConteudo);
     li.appendChild(pensamentoAutoria);
+    li.appendChild(pensamentoData);
     li.appendChild(icones);
     listaPensamentos.appendChild(li);
   },

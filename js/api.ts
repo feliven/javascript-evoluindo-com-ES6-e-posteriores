@@ -70,7 +70,6 @@ const api = {
       if (!response.ok) throw new Error("Problema na resposta da rede");
 
       let responseJSON = (await response.json()) as InterfacePensamento;
-      console.log(responseJSON);
       if (responseJSON.favorito === true) {
         responseJSON.favorito = false;
       } else {

@@ -71,7 +71,6 @@ const api = {
             if (!response.ok)
                 throw new Error("Problema na resposta da rede");
             let responseJSON = (await response.json());
-            console.log(responseJSON);
             if (responseJSON.favorito === true) {
                 responseJSON.favorito = false;
             }
