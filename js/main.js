@@ -24,6 +24,10 @@ async function manipularSubmissaoFormulario(event) {
     const dataString = dataElemento ? dataElemento.value : ""; // it is in a ISO 8601 standard format ("YYYY-MM-DD")
     const data = new Date(dataString + "T00:00:00"); // meia-noite no horário local
     const favorito = false;
+    if (checarSeDataEstaNoFuturo(data)) {
+        alert("Data não pode estar no futuro");
+        return;
+    }
     try {
         if (id) {
             const pensamentoAtualizado = await api.editarPensamento({
@@ -94,7 +98,11 @@ async function manipularBusca() {
         ui.renderizarPensamentos(pensamentosFiltrados);
     }
     catch (error) {
-        throw new Error("");
+        throw new Error("errorrrrr");
     }
+}
+function checarSeDataEstaNoFuturo(data) {
+    const dataAtual = new Date();
+    return data > dataAtual;
 }
 //# sourceMappingURL=main.js.map

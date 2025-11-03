@@ -32,6 +32,11 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
 
   const favorito = false;
 
+  if (checarSeDataEstaNoFuturo(data)) {
+    alert("Data não pode estar no futuro");
+    return;
+  }
+
   try {
     if (id) {
       const pensamentoAtualizado: InterfacePensamento = await api.editarPensamento({
@@ -107,6 +112,12 @@ async function manipularBusca() {
     const pensamentosFiltrados = await api.pensamentoSearch(searchTerm);
     ui.renderizarPensamentos(pensamentosFiltrados);
   } catch (error) {
-    throw new Error("");
+    throw new Error("errorrrrr");
   }
+}
+
+function checarSeDataEstaNoFuturo(data: Date): boolean {
+  const dataAtual = new Date();
+
+  return data > dataAtual;
 }
