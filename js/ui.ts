@@ -73,9 +73,17 @@ const ui = {
     pensamentoAutoria.textContent = pensamento.autoria;
     pensamentoAutoria.classList.add("pensamento-autoria");
 
+    const opcoesDeData: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    };
+
     const pensamentoData = document.createElement("div");
     const pensamentoDataComoString = pensamento.data
-      ? new Date(pensamento.data).toLocaleDateString("pt-br", { day: "2-digit", month: "2-digit", year: "numeric" })
+      ? new Date(pensamento.data).toLocaleDateString("pt-br", opcoesDeData)
       : null;
     pensamentoData.textContent = pensamentoDataComoString;
     pensamentoData.classList.add("pensamento-data");
