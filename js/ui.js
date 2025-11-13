@@ -83,7 +83,11 @@ const ui = {
         const pensamentoDataComoString = pensamento.data
             ? new Date(pensamento.data).toLocaleDateString("pt-br", opcoesDeData)
             : null;
-        pensamentoData.textContent = pensamentoDataComoString;
+        // o nome do dia da semana presente no card terá letra inicial maiúscula
+        const dataComRegex = pensamentoDataComoString
+            ? pensamentoDataComoString.replace(/^(\w)/, (match) => match.toUpperCase())
+            : "";
+        pensamentoData.textContent = dataComRegex;
         pensamentoData.classList.add("pensamento-data");
         const botaoEditar = document.createElement("button");
         botaoEditar.type = "button";
