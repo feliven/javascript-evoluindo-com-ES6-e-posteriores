@@ -3,6 +3,14 @@ import api from "./api.js";
 let formularioPensamento;
 let botaoCancelar;
 let inputBusca;
+const filtroRegexConteudo = /^[a-zA-Z ]{10,}$/;
+const filtroRegexAutoria = /^[a-zA-Z]{3,15}$/;
+function validarConteudoRegex(conteudo) {
+    return filtroRegexConteudo.test(conteudo.trim());
+}
+function validarAutoriaRegex(autoria) {
+    return filtroRegexAutoria.test(autoria.trim());
+}
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
     formularioPensamento = document.getElementById("pensamento-form");
@@ -24,6 +32,14 @@ async function manipularSubmissaoFormulario(event) {
     const dataString = dataElemento ? dataElemento.value : ""; // it is in a ISO 8601 standard format ("YYYY-MM-DD")
     const data = new Date(dataString + "T00:00:00"); // meia-noite no horário local
     const favorito = false;
+    if (!validarConteudoRegex(conteudo)) {
+        alert("Pensamento deve ter somente letras e espaços, com no mínimo 10 caracteres.");
+        return;
+    }
+    if (!validarAutoriaRegex(autoria)) {
+        alert("Autoria pode conter apenas letras, e deve ter de 3 a 15 caracteres.");
+        return;
+    }
     if (checarSeDataEstaNoFuturo(data)) {
         alert("Data não pode estar no futuro");
         return;

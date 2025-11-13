@@ -6,6 +6,17 @@ let formularioPensamento: HTMLFormElement | null;
 let botaoCancelar: HTMLButtonElement | null;
 let inputBusca: HTMLInputElement | null;
 
+const filtroRegexConteudo = /^[a-zA-Z ]{10,}$/;
+const filtroRegexAutoria = /^[a-zA-Z]{3,15}$/;
+
+function validarConteudoRegex(conteudo: string) {
+  return filtroRegexConteudo.test(conteudo.trim());
+}
+
+function validarAutoriaRegex(autoria: string) {
+  return filtroRegexAutoria.test(autoria.trim());
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
 
@@ -31,6 +42,16 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
   const data = new Date(dataString + "T00:00:00"); // meia-noite no horário local
 
   const favorito = false;
+
+  if (!validarConteudoRegex(conteudo)) {
+    alert("Pensamento deve ter somente letras e espaços, com no mínimo 10 caracteres.");
+    return;
+  }
+
+  if (!validarAutoriaRegex(autoria)) {
+    alert("Autoria pode conter apenas letras, e deve ter de 3 a 15 caracteres.");
+    return;
+  }
 
   if (checarSeDataEstaNoFuturo(data)) {
     alert("Data não pode estar no futuro");
