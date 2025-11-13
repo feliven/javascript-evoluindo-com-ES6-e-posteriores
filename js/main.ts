@@ -17,6 +17,10 @@ function validarAutoriaRegex(autoria: string) {
   return filtroRegexAutoria.test(autoria.trim());
 }
 
+function removerEspacos(texto: string) {
+  return texto.replaceAll(/\s+/g, "");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
 
@@ -43,12 +47,15 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
 
   const favorito = false;
 
-  if (!validarConteudoRegex(conteudo)) {
+  const conteudoSemEspacos = removerEspacos(conteudo);
+  const autoriaSemEspacos = removerEspacos(autoria);
+
+  if (!validarConteudoRegex(conteudoSemEspacos)) {
     alert("Pensamento deve ter somente letras e espaços, com no mínimo 10 caracteres.");
     return;
   }
 
-  if (!validarAutoriaRegex(autoria)) {
+  if (!validarAutoriaRegex(autoriaSemEspacos)) {
     alert("Autoria pode conter apenas letras, e deve ter de 3 a 15 caracteres.");
     return;
   }

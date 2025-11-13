@@ -11,6 +11,9 @@ function validarConteudoRegex(conteudo) {
 function validarAutoriaRegex(autoria) {
     return filtroRegexAutoria.test(autoria.trim());
 }
+function removerEspacos(texto) {
+    return texto.replaceAll(/\s+/g, "");
+}
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
     formularioPensamento = document.getElementById("pensamento-form");
@@ -32,11 +35,13 @@ async function manipularSubmissaoFormulario(event) {
     const dataString = dataElemento ? dataElemento.value : ""; // it is in a ISO 8601 standard format ("YYYY-MM-DD")
     const data = new Date(dataString + "T00:00:00"); // meia-noite no horário local
     const favorito = false;
-    if (!validarConteudoRegex(conteudo)) {
+    const conteudoSemEspacos = removerEspacos(conteudo);
+    const autoriaSemEspacos = removerEspacos(autoria);
+    if (!validarConteudoRegex(conteudoSemEspacos)) {
         alert("Pensamento deve ter somente letras e espaços, com no mínimo 10 caracteres.");
         return;
     }
-    if (!validarAutoriaRegex(autoria)) {
+    if (!validarAutoriaRegex(autoriaSemEspacos)) {
         alert("Autoria pode conter apenas letras, e deve ter de 3 a 15 caracteres.");
         return;
     }
