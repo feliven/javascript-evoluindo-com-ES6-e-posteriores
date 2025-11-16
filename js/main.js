@@ -1,5 +1,19 @@
 import ui from "./ui.js";
 import api from "./api.js";
+const setPensamentos = new Set();
+async function adicionarChaveAoPensamento() {
+    try {
+        const listaPensamentos = (await api.buscarPensamentos());
+        listaPensamentos.forEach((pensamento) => {
+            const chavePensamento = `${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}`;
+            setPensamentos.add(chavePensamento);
+        });
+    }
+    catch {
+        alert("erro ao adicionar chave ao pensamento");
+        throw Error;
+    }
+}
 let formularioPensamento;
 let botaoCancelar;
 let inputBusca;
@@ -16,6 +30,7 @@ function removerEspacos(texto) {
 }
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
+    adicionarChaveAoPensamento();
     formularioPensamento = document.getElementById("pensamento-form");
     botaoCancelar = document.getElementById("botao-cancelar");
     inputBusca = document.getElementById("campo-busca");
@@ -47,6 +62,11 @@ async function manipularSubmissaoFormulario(event) {
     }
     if (checarSeDataEstaNoFuturo(data)) {
         alert("Data não pode estar no futuro");
+        return;
+    }
+    const chaveNovoPensamento = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`;
+    if (setPensamentos.has(chaveNovoPensamento)) {
+        alert("este pensamento já EXISTE");
         return;
     }
     try {

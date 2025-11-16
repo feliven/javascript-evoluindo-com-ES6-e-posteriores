@@ -2,6 +2,21 @@ import ui from "./ui.js";
 import api from "./api.js";
 import { InterfacePensamento } from "./interface-pensamento.js";
 
+const setPensamentos = new Set();
+
+async function adicionarChaveAoPensamento() {
+  try {
+    const listaPensamentos = (await api.buscarPensamentos()) as InterfacePensamento[];
+    listaPensamentos.forEach((pensamento) => {
+      const chavePensamento = `${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}`;
+      setPensamentos.add(chavePensamento);
+    });
+  } catch {
+    alert("erro ao adicionar chave ao pensamento");
+    throw Error;
+  }
+}
+
 let formularioPensamento: HTMLFormElement | null;
 let botaoCancelar: HTMLButtonElement | null;
 let inputBusca: HTMLInputElement | null;
@@ -23,6 +38,7 @@ function removerEspacos(texto: string) {
 
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
+  adicionarChaveAoPensamento();
 
   formularioPensamento = document.getElementById("pensamento-form") as HTMLFormElement;
   botaoCancelar = document.getElementById("botao-cancelar") as HTMLButtonElement;
@@ -62,6 +78,13 @@ async function manipularSubmissaoFormulario(event: SubmitEvent) {
 
   if (checarSeDataEstaNoFuturo(data)) {
     alert("Data não pode estar no futuro");
+    return;
+  }
+
+  const chaveNovoPensamento = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`;
+
+  if (setPensamentos.has(chaveNovoPensamento)) {
+    alert("este pensamento já EXISTE");
     return;
   }
 
