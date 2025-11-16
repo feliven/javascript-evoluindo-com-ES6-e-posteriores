@@ -3,7 +3,7 @@ import type { InterfacePensamento } from "./interface-pensamento.js";
 const URL_BASE = "http://localhost:3000";
 
 const api = {
-  async buscarPensamentos() {
+  async buscarPensamentos(): Promise<InterfacePensamento[] | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos`);
       if (!response.ok) throw new Error("Problema na resposta da rede");
@@ -14,7 +14,7 @@ const api = {
     }
   },
 
-  async salvarPensamento(pensamento: InterfacePensamento) {
+  async salvarPensamento(pensamento: InterfacePensamento): Promise<InterfacePensamento | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos`, {
         method: "POST",
@@ -31,7 +31,7 @@ const api = {
     }
   },
 
-  async buscarPensamentoPorId(id: string) {
+  async buscarPensamentoPorId(id: string): Promise<InterfacePensamento | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`);
       if (!response.ok) throw new Error("Problema na resposta da rede");
@@ -42,7 +42,7 @@ const api = {
     }
   },
 
-  async editarPensamento(pensamento: InterfacePensamento) {
+  async editarPensamento(pensamento: InterfacePensamento): Promise<InterfacePensamento | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${pensamento.id}`, {
         method: "PUT",
@@ -59,7 +59,7 @@ const api = {
     }
   },
 
-  async atualizarFavorito(id: string) {
+  async atualizarFavorito(id: string): Promise<void | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
         method: "GET",
@@ -82,7 +82,7 @@ const api = {
     }
   },
 
-  async excluirPensamento(id: string) {
+  async excluirPensamento(id: string): Promise<void | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
         method: "DELETE",
@@ -94,7 +94,7 @@ const api = {
     }
   },
 
-  async pensamentoSearch(searchTerm: string) {
+  async pensamentoSearch(searchTerm: string): Promise<InterfacePensamento[] | Error> {
     try {
       const todosOsPensamentos = (await this.buscarPensamentos()) as InterfacePensamento[];
       const termoDeBuscaEmMinusculas = searchTerm.toLowerCase();

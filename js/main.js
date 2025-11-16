@@ -51,13 +51,13 @@ async function manipularSubmissaoFormulario(event) {
     }
     try {
         if (id) {
-            const pensamentoAtualizado = await api.editarPensamento({
+            const pensamentoAtualizado = (await api.editarPensamento({
                 id,
                 conteudo,
                 autoria,
                 favorito,
                 data,
-            });
+            }));
             const li = document.querySelector(`[data-id="${id}"]`);
             if (li) {
                 li.querySelector(".pensamento-conteudo").textContent = pensamentoAtualizado.conteudo;
@@ -77,7 +77,9 @@ async function manipularSubmissaoFormulario(event) {
         else {
             // Adiciona novo item
             const novoPensamento = await api.salvarPensamento({ conteudo, autoria, favorito, data });
-            ui.adicionarPensamentoNaLista(novoPensamento);
+            if (novoPensamento && typeof novoPensamento === "object" && "id" in novoPensamento) {
+                ui.adicionarPensamentoNaLista(novoPensamento);
+            }
             // Oculta mensagem vazia se ela estiver visível
             const mensagemVazia = document.getElementById("mensagem-vazia");
             if (mensagemVazia) {
@@ -116,7 +118,9 @@ async function manipularBusca() {
     const searchTerm = inputBusca.value;
     try {
         const pensamentosFiltrados = await api.pensamentoSearch(searchTerm);
-        ui.renderizarPensamentos(pensamentosFiltrados);
+        if (Array.isArray(pensamentosFiltrados)) {
+            ui.renderizarPensamentos(pensamentosFiltrados);
+        }
     }
     catch (error) {
         throw new Error("errorrrrr");

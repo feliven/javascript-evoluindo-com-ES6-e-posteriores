@@ -2,7 +2,7 @@ import api from "./api.js";
 import type { InterfacePensamento } from "./interface-pensamento.js";
 
 const ui = {
-  async preencherFormulario(pensamentoId: string) {
+  async preencherFormulario(pensamentoId: string): Promise<void> {
     const pensamento = (await api.buscarPensamentoPorId(pensamentoId)) as InterfacePensamento;
 
     const pensamentoIDNaPagina = document.getElementById("pensamento-id") as HTMLInputElement;
@@ -32,14 +32,14 @@ const ui = {
     document.getElementById("form-container")?.scrollIntoView();
   },
 
-  limparFormulario() {
+  limparFormulario(): void {
     const formulario = document.getElementById("pensamento-form") as HTMLFormElement;
     if (formulario) {
       formulario.reset();
     }
   },
 
-  async renderizarPensamentos(arrayPensamentos?: InterfacePensamento[]) {
+  async renderizarPensamentos(arrayPensamentos?: InterfacePensamento[]): Promise<void> {
     const listaPensamentos = document.getElementById("lista-pensamentos") as HTMLUListElement;
     const mensagemVazia = document.getElementById("mensagem-vazia") as HTMLDivElement;
     listaPensamentos.innerHTML = "";
@@ -67,7 +67,7 @@ const ui = {
     }
   },
 
-  adicionarPensamentoNaLista(pensamento: InterfacePensamento) {
+  adicionarPensamentoNaLista(pensamento: InterfacePensamento): InterfacePensamento | void {
     if (!pensamento.id) {
       return;
     }
