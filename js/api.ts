@@ -59,25 +59,18 @@ const api = {
     }
   },
 
-  async atualizarFavorito(id: string): Promise<void | Error> {
+  async atualizarFavorito(id: string, novoEstadoFavorito: boolean): Promise<void | Error> {
     try {
       const response = await fetch(`${URL_BASE}/pensamentos/${id}`, {
-        method: "GET",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ favorito: novoEstadoFavorito }),
       });
       if (!response.ok) throw new Error("Problema na resposta da rede");
-
-      let responseJSON = (await response.json()) as InterfacePensamento;
-      if (responseJSON.favorito === true) {
-        responseJSON.favorito = false;
-      } else {
-        responseJSON.favorito = true;
-      }
-      await this.editarPensamento(responseJSON);
     } catch {
-      alert("Erro ao editar um pensamento");
+      alert("Erro ao atualizar favorito");
       throw new Error();
     }
   },

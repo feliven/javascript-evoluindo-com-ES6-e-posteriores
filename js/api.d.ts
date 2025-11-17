@@ -4,7 +4,7 @@ declare const api: {
     salvarPensamento(pensamento: InterfacePensamento): Promise<InterfacePensamento | Error>;
     buscarPensamentoPorId(id: string): Promise<InterfacePensamento | Error>;
     editarPensamento(pensamento: InterfacePensamento): Promise<InterfacePensamento | Error>;
-    atualizarFavorito(id: string): Promise<void | Error>;
+    atualizarFavorito(id: string, novoEstadoFavorito: boolean): Promise<void | Error>;
     excluirPensamento(id: string): Promise<void | Error>;
     pensamentoSearch(searchTerm: string): Promise<InterfacePensamento[] | Error>;
 };

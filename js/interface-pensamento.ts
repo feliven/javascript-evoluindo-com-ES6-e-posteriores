@@ -3,5 +3,5 @@ export interface InterfacePensamento {
   conteudo: string;
   autoria: string;
   favorito: boolean;
-  data?: Date;
+  data?: string | Date;
 }

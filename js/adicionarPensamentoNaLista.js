@@ -79,14 +79,11 @@ export function adicionarPensamentoNaLista(pensamento) {
     botaoFavorito.onclick = async (event) => {
         event.preventDefault();
         try {
-            await api.atualizarFavorito(pensamento.id);
-            // Toggle the icon without re-rendering the entire list
-            const isFavorited = iconeFavorito.src.includes("icone-favorito.png");
-            iconeFavorito.src = isFavorited
-                ? "./assets/imagens/icone-favorito_outline.png"
-                : "./assets/imagens/icone-favorito.png";
-            // Update the pensamento object to keep state in sync
             pensamento.favorito = !pensamento.favorito;
+            await api.atualizarFavorito(pensamento.id, pensamento.favorito);
+            iconeFavorito.src = pensamento.favorito
+                ? "./assets/imagens/icone-favorito.png"
+                : "./assets/imagens/icone-favorito_outline.png";
         }
         catch {
             alert("Erro ao atualizar favorito");
