@@ -1,5 +1,5 @@
-import api from "./api.js";
-import type { InterfacePensamento } from "./interface-pensamento.js";
+import api from "../js/api.js";
+import type { InterfacePensamento } from "../js/interface-pensamento.js";
 import { adicionarPensamentoNaLista } from "./adicionarPensamentoNaLista.js";
 
 export async function renderizarPensamentos(arrayPensamentos?: InterfacePensamento[]): Promise<void> {

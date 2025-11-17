@@ -1,9 +1,9 @@
-import api from "./api.js";
-import { InterfacePensamento } from "./interface-pensamento.js";
-import { renderizarPensamentos } from "./renderizarPensamentos.js";
-import { manipularSubmissaoFormulario } from "./manipularSubmissaoFormulario.js";
-import { setPensamentos } from "./manipularSet.js";
-import { limparFormulario } from "./limparFormulario.js";
+import api from "../js/api.js";
+import { InterfacePensamento } from "../js/interface-pensamento.js";
+import { renderizarPensamentos } from "../js/renderizarPensamentos.js";
+import { manipularSubmissaoFormulario } from "../js/manipularSubmissaoFormulario.js";
+import { setPensamentos } from "../js/manipularSet.js";
+import { limparFormulario } from "../js/limparFormulario.js";
 
 async function adicionarChaveAoPensamento() {
   try {

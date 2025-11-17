@@ -1,7 +1,7 @@
-import api from "./api.js";
-import type { InterfacePensamento } from "./interface-pensamento.js";
-import { preencherFormulario } from "./preencherFormulario.js";
-import { removerPensamentoDoSet } from "./manipularSet.js";
+import api from "../js/api.js";
+import type { InterfacePensamento } from "../js/interface-pensamento.js";
+import { preencherFormulario } from "../js/preencherFormulario.js";
+import { removerPensamentoDoSet } from "../js/manipularSet.js";
 
 export function adicionarPensamentoNaLista(pensamento: InterfacePensamento): InterfacePensamento | void {
   if (!pensamento.id) {

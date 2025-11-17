@@ -1,5 +1,5 @@
-import api from "./api.js";
-import type { InterfacePensamento } from "./interface-pensamento.js";
+import api from "../js/api.js";
+import type { InterfacePensamento } from "../js/interface-pensamento.js";
 
 export async function preencherFormulario(pensamentoId: string): Promise<void> {
   const pensamento = (await api.buscarPensamentoPorId(pensamentoId)) as InterfacePensamento;

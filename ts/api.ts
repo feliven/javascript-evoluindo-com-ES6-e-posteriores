@@ -1,4 +1,4 @@
-import type { InterfacePensamento } from "./interface-pensamento.js";
+import type { InterfacePensamento } from "../js/interface-pensamento.js";
 
 const URL_BASE = "http://localhost:3000";
 

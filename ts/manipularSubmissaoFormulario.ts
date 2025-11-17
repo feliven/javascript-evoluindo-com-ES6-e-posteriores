@@ -1,8 +1,8 @@
-import api from "./api.js";
-import type { InterfacePensamento } from "./interface-pensamento.js";
+import api from "../js/api.js";
+import type { InterfacePensamento } from "../js/interface-pensamento.js";
 import { adicionarPensamentoNaLista } from "./adicionarPensamentoNaLista.js";
-import { limparFormulario } from "./limparFormulario.js";
-import { setPensamentos } from "./manipularSet.js";
+import { limparFormulario } from "../js/limparFormulario.js";
+import { setPensamentos } from "../js/manipularSet.js";
 
 const filtroRegexConteudo = /^[a-zA-Z ]{10,}$/;
 const filtroRegexAutoria = /^[a-zA-Z]{3,15}$/;
