@@ -1,2 +1,2 @@
-export declare function removerPensamentoDoSet(conteudo: string, autoria: string): void;
+export {};
 //# sourceMappingURL=main.d.ts.map
