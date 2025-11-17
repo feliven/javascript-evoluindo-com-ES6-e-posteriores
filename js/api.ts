@@ -10,7 +10,7 @@ const api = {
       return await response.json();
     } catch {
       alert("Erro ao buscar pensamentos");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -27,7 +27,7 @@ const api = {
       return await response.json();
     } catch {
       alert("Erro ao salvar pensamento");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -38,7 +38,7 @@ const api = {
       return await response.json();
     } catch {
       alert("Erro ao buscar pensamento");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -55,7 +55,7 @@ const api = {
       return await response.json();
     } catch {
       alert("Erro ao editar pensamento");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -78,7 +78,7 @@ const api = {
       await this.editarPensamento(responseJSON);
     } catch {
       alert("Erro ao editar um pensamento");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -90,7 +90,7 @@ const api = {
       if (!response.ok) throw new Error("Problema na resposta da rede");
     } catch {
       alert("Erro ao excluir um pensamento");
-      throw Error;
+      throw new Error();
     }
   },
 
@@ -107,8 +107,8 @@ const api = {
       });
 
       return pensamentosFiltrados;
-    } catch (error) {
-      throw new Error("${error}");
+    } catch {
+      throw new Error();
     }
   },
 };

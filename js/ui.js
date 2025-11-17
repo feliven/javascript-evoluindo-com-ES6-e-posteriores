@@ -1,4 +1,5 @@
 import api from "./api.js";
+import { removerPensamentoDoSet } from "./main.js";
 const ui = {
     async preencherFormulario(pensamentoId) {
         const pensamento = (await api.buscarPensamentoPorId(pensamentoId));
@@ -35,7 +36,8 @@ const ui = {
         listaPensamentos.innerHTML = "";
         try {
             const pensamentos = (await api.buscarPensamentos());
-            if (!pensamentos) {
+            // The check if (!pensamentos) will never be true because an empty array is truthy
+            if (pensamentos.length === 0) {
                 return;
             }
             if (typeof arrayPensamentos === "undefined") {
@@ -63,7 +65,7 @@ const ui = {
         li.setAttribute("data-id", pensamento.id);
         li.classList.add("li-pensamento");
         const iconeAspas = document.createElement("img");
-        iconeAspas.src = "assets/imagens/aspas-azuis.png";
+        iconeAspas.src = "./assets/imagens/aspas-azuis.png";
         iconeAspas.alt = "Aspas azuis";
         iconeAspas.classList.add("icone-aspas");
         const pensamentoConteudo = document.createElement("div");
@@ -97,7 +99,7 @@ const ui = {
             ui.preencherFormulario(pensamento.id);
         };
         const iconeEditar = document.createElement("img");
-        iconeEditar.src = "assets/imagens/icone-editar.png";
+        iconeEditar.src = "./assets/imagens/icone-editar.png";
         iconeEditar.alt = "Editar";
         botaoEditar.appendChild(iconeEditar);
         const botaoExcluir = document.createElement("button");
@@ -107,6 +109,8 @@ const ui = {
             event.preventDefault();
             try {
                 await api.excluirPensamento(pensamento.id);
+                // Update the Set
+                removerPensamentoDoSet(pensamento.conteudo, pensamento.autoria);
                 // Remove only this specific list item from the DOM
                 li.remove();
                 // Check if the list is now empty and show the empty message if needed
@@ -116,12 +120,12 @@ const ui = {
                     mensagemVazia.style.display = "block";
                 }
             }
-            catch (error) {
+            catch {
                 alert("Erro ao excluir pensamento");
             }
         };
         const iconeExcluir = document.createElement("img");
-        iconeExcluir.src = "assets/imagens/icone-excluir.png";
+        iconeExcluir.src = "./assets/imagens/icone-excluir.png";
         iconeExcluir.alt = "Excluir";
         botaoExcluir.appendChild(iconeExcluir);
         const botaoFavorito = document.createElement("button");
@@ -134,19 +138,19 @@ const ui = {
                 // Toggle the icon without re-rendering the entire list
                 const isFavorited = iconeFavorito.src.includes("icone-favorito.png");
                 iconeFavorito.src = isFavorited
-                    ? "assets/imagens/icone-favorito_outline.png"
-                    : "assets/imagens/icone-favorito.png";
+                    ? "./assets/imagens/icone-favorito_outline.png"
+                    : "./assets/imagens/icone-favorito.png";
                 // Update the pensamento object to keep state in sync
                 pensamento.favorito = !pensamento.favorito;
             }
-            catch (error) {
+            catch {
                 alert("Erro ao atualizar favorito");
             }
         };
         const iconeFavorito = document.createElement("img");
         iconeFavorito.src = pensamento.favorito
-            ? "assets/imagens/icone-favorito.png"
-            : "assets/imagens/icone-favorito_outline.png";
+            ? "./assets/imagens/icone-favorito.png"
+            : "./assets/imagens/icone-favorito_outline.png";
         iconeFavorito.alt = "Ícone de favorito";
         botaoFavorito.appendChild(iconeFavorito);
         const icones = document.createElement("div");

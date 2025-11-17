@@ -1,5 +1,6 @@
 import api from "./api.js";
 import type { InterfacePensamento } from "./interface-pensamento.js";
+import { removerPensamentoDoSet } from "./main.js";
 
 const ui = {
   async preencherFormulario(pensamentoId: string): Promise<void> {
@@ -47,7 +48,8 @@ const ui = {
     try {
       const pensamentos = (await api.buscarPensamentos()) as InterfacePensamento[];
 
-      if (!pensamentos) {
+      // The check if (!pensamentos) will never be true because an empty array is truthy
+      if (pensamentos.length === 0) {
         return;
       }
 
@@ -78,7 +80,7 @@ const ui = {
     li.classList.add("li-pensamento");
 
     const iconeAspas = document.createElement("img");
-    iconeAspas.src = "assets/imagens/aspas-azuis.png";
+    iconeAspas.src = "./assets/imagens/aspas-azuis.png";
     iconeAspas.alt = "Aspas azuis";
     iconeAspas.classList.add("icone-aspas");
 
@@ -119,7 +121,7 @@ const ui = {
     };
 
     const iconeEditar = document.createElement("img");
-    iconeEditar.src = "assets/imagens/icone-editar.png";
+    iconeEditar.src = "./assets/imagens/icone-editar.png";
     iconeEditar.alt = "Editar";
     botaoEditar.appendChild(iconeEditar);
 
@@ -131,6 +133,9 @@ const ui = {
       try {
         await api.excluirPensamento(pensamento.id as string);
 
+        // Update the Set
+        removerPensamentoDoSet(pensamento.conteudo, pensamento.autoria);
+
         // Remove only this specific list item from the DOM
         li.remove();
 
@@ -141,13 +146,13 @@ const ui = {
         if (listaPensamentos.children.length === 0) {
           mensagemVazia.style.display = "block";
         }
-      } catch (error) {
+      } catch {
         alert("Erro ao excluir pensamento");
       }
     };
 
     const iconeExcluir = document.createElement("img");
-    iconeExcluir.src = "assets/imagens/icone-excluir.png";
+    iconeExcluir.src = "./assets/imagens/icone-excluir.png";
     iconeExcluir.alt = "Excluir";
     botaoExcluir.appendChild(iconeExcluir);
 
@@ -162,20 +167,20 @@ const ui = {
         // Toggle the icon without re-rendering the entire list
         const isFavorited = iconeFavorito.src.includes("icone-favorito.png");
         iconeFavorito.src = isFavorited
-          ? "assets/imagens/icone-favorito_outline.png"
-          : "assets/imagens/icone-favorito.png";
+          ? "./assets/imagens/icone-favorito_outline.png"
+          : "./assets/imagens/icone-favorito.png";
 
         // Update the pensamento object to keep state in sync
         pensamento.favorito = !pensamento.favorito;
-      } catch (error) {
+      } catch {
         alert("Erro ao atualizar favorito");
       }
     };
 
     const iconeFavorito = document.createElement("img");
     iconeFavorito.src = pensamento.favorito
-      ? "assets/imagens/icone-favorito.png"
-      : "assets/imagens/icone-favorito_outline.png";
+      ? "./assets/imagens/icone-favorito.png"
+      : "./assets/imagens/icone-favorito_outline.png";
     iconeFavorito.alt = "Ícone de favorito";
     botaoFavorito.appendChild(iconeFavorito);
 

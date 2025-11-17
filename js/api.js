@@ -9,7 +9,7 @@ const api = {
         }
         catch {
             alert("Erro ao buscar pensamentos");
-            throw Error;
+            throw new Error();
         }
     },
     async salvarPensamento(pensamento) {
@@ -27,7 +27,7 @@ const api = {
         }
         catch {
             alert("Erro ao salvar pensamento");
-            throw Error;
+            throw new Error();
         }
     },
     async buscarPensamentoPorId(id) {
@@ -39,7 +39,7 @@ const api = {
         }
         catch {
             alert("Erro ao buscar pensamento");
-            throw Error;
+            throw new Error();
         }
     },
     async editarPensamento(pensamento) {
@@ -57,7 +57,7 @@ const api = {
         }
         catch {
             alert("Erro ao editar pensamento");
-            throw Error;
+            throw new Error();
         }
     },
     async atualizarFavorito(id) {
@@ -81,7 +81,7 @@ const api = {
         }
         catch {
             alert("Erro ao editar um pensamento");
-            throw Error;
+            throw new Error();
         }
     },
     async excluirPensamento(id) {
@@ -94,7 +94,7 @@ const api = {
         }
         catch {
             alert("Erro ao excluir um pensamento");
-            throw Error;
+            throw new Error();
         }
     },
     async pensamentoSearch(searchTerm) {
@@ -107,8 +107,8 @@ const api = {
             });
             return pensamentosFiltrados;
         }
-        catch (error) {
-            throw new Error("${error}");
+        catch {
+            throw new Error();
         }
     },
 };

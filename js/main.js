@@ -11,7 +11,7 @@ async function adicionarChaveAoPensamento() {
     }
     catch {
         alert("erro ao adicionar chave ao pensamento");
-        throw Error;
+        throw new Error();
     }
 }
 let formularioPensamento;
@@ -28,9 +28,9 @@ function validarAutoriaRegex(autoria) {
 function removerEspacos(texto) {
     return texto.replaceAll(/\s+/g, "");
 }
-document.addEventListener("DOMContentLoaded", () => {
-    ui.renderizarPensamentos();
-    adicionarChaveAoPensamento();
+document.addEventListener("DOMContentLoaded", async () => {
+    await ui.renderizarPensamentos();
+    await adicionarChaveAoPensamento();
     formularioPensamento = document.getElementById("pensamento-form");
     botaoCancelar = document.getElementById("botao-cancelar");
     inputBusca = document.getElementById("campo-busca");
@@ -52,11 +52,11 @@ async function manipularSubmissaoFormulario(event) {
     const favorito = false;
     const conteudoSemEspacos = removerEspacos(conteudo);
     const autoriaSemEspacos = removerEspacos(autoria);
-    if (!validarConteudoRegex(conteudoSemEspacos)) {
+    if (!validarConteudoRegex(conteudo)) {
         alert("Pensamento deve ter somente letras e espaços, com no mínimo 10 caracteres.");
         return;
     }
-    if (!validarAutoriaRegex(autoriaSemEspacos)) {
+    if (!validarAutoriaRegex(autoria)) {
         alert("Autoria pode conter apenas letras, e deve ter de 3 a 15 caracteres.");
         return;
     }
@@ -65,9 +65,23 @@ async function manipularSubmissaoFormulario(event) {
         return;
     }
     const chaveNovoPensamento = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`;
-    if (setPensamentos.has(chaveNovoPensamento)) {
-        alert("este pensamento já EXISTE");
-        return;
+    let chaveAntiga = "";
+    if (id) {
+        // When editing, get the old key to remove it
+        const pensamentoAntigo = (await api.buscarPensamentoPorId(id));
+        chaveAntiga = `${pensamentoAntigo.conteudo.trim().toLowerCase()}-${pensamentoAntigo.autoria.trim().toLowerCase()}`;
+        // Check if new key already exists (but not the same as old key)
+        if (setPensamentos.has(chaveNovoPensamento) && chaveNovoPensamento !== chaveAntiga) {
+            alert("Este pensamento já EXISTE");
+            return;
+        }
+    }
+    else {
+        // For new pensamentos, just check if it exists
+        if (setPensamentos.has(chaveNovoPensamento)) {
+            alert("Este pensamento já EXISTE");
+            return;
+        }
     }
     try {
         if (id) {
@@ -78,20 +92,32 @@ async function manipularSubmissaoFormulario(event) {
                 favorito,
                 data,
             }));
+            // Update Set - remove old key and add new one (don't fetch again!)
+            setPensamentos.delete(chaveAntiga);
+            setPensamentos.add(chaveNovoPensamento);
             const li = document.querySelector(`[data-id="${id}"]`);
             if (li) {
                 li.querySelector(".pensamento-conteudo").textContent = pensamentoAtualizado.conteudo;
                 li.querySelector(".pensamento-autoria").textContent = pensamentoAtualizado.autoria;
-                li.querySelector(".pensamento-data").textContent = pensamentoAtualizado.data
-                    ? pensamentoAtualizado.data.toString()
-                    : null;
+                const opcoesDeData = {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                };
+                const dataFormatada = pensamentoAtualizado.data
+                    ? new Date(pensamentoAtualizado.data).toLocaleDateString("pt-br", opcoesDeData)
+                    : "";
+                const dataComRegex = dataFormatada.replace(/^(\w)/, (match) => match.toUpperCase());
+                li.querySelector(".pensamento-data").textContent = dataComRegex;
             }
             // Atualiza o ícone de favorito
             const iconeFavorito = li.querySelector(".botao-favorito img");
             if (iconeFavorito) {
                 iconeFavorito.src = pensamentoAtualizado.favorito
-                    ? "assets/imagens/icone-favorito.png"
-                    : "assets/imagens/icone-favorito_outline.png";
+                    ? "./assets/imagens/icone-favorito.png"
+                    : "./assets/imagens/icone-favorito_outline.png";
             }
         }
         else {
@@ -99,6 +125,8 @@ async function manipularSubmissaoFormulario(event) {
             const novoPensamento = await api.salvarPensamento({ conteudo, autoria, favorito, data });
             if (novoPensamento && typeof novoPensamento === "object" && "id" in novoPensamento) {
                 ui.adicionarPensamentoNaLista(novoPensamento);
+                // Add to Set!
+                setPensamentos.add(chaveNovoPensamento);
             }
             // Oculta mensagem vazia se ela estiver visível
             const mensagemVazia = document.getElementById("mensagem-vazia");
@@ -119,18 +147,6 @@ async function manipularSubmissaoFormulario(event) {
 function manipularCancelamento() {
     ui.limparFormulario();
 }
-async function manipularFavorito() {
-    try {
-        const idSemValue = document.getElementById("pensamento-id");
-        const id = idSemValue ? idSemValue.value : "";
-        if (id) {
-            await api.atualizarFavorito(id);
-        }
-    }
-    catch (error) {
-        throw new Error("ERRO");
-    }
-}
 async function manipularBusca() {
     if (!inputBusca) {
         return;
@@ -142,12 +158,21 @@ async function manipularBusca() {
             ui.renderizarPensamentos(pensamentosFiltrados);
         }
     }
-    catch (error) {
+    catch {
         throw new Error("errorrrrr");
     }
 }
+// if checarSeDataEstaNoFuturo() compares dates without normalizing time, it can cause false positives
+// if the current time is later in the day.
 function checarSeDataEstaNoFuturo(data) {
     const dataAtual = new Date();
-    return data > dataAtual;
+    dataAtual.setHours(0, 0, 0, 0);
+    const dataComparar = new Date(data);
+    dataComparar.setHours(0, 0, 0, 0);
+    return dataComparar > dataAtual;
+}
+export function removerPensamentoDoSet(conteudo, autoria) {
+    const chave = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`;
+    setPensamentos.delete(chave);
 }
 //# sourceMappingURL=main.js.map
